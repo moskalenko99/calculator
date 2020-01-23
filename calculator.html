@@ -3,24 +3,6 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Calculator</title>
-    <script>
-        function insert(num) {
-            document.form.text.value = document.form.text.value + num;
-        }
-        function equal() {
-            var exp = document.form.text.value;
-            if(exp){
-                document.form.text.value = eval(exp);
-            }
-        }
-        function clean() {
-            document.form.text.value = "";
-        }
-        function back() {
-            var exp = document.form.text.value;
-            document.form.text.value = exp.substring(0,exp.length-1);
-        }
-    </script>
     <style>
         *{
             margin: 0;
@@ -97,5 +79,85 @@
         </tr>
     </table>
 </div>
+
+<script>
+
+    function calculator(exp){
+        var exp = document.form.text.value;
+        let indexSign = [];
+        let number = [];
+        let indexNumber = 0; 
+        let count = 0; 
+        let index = 0; 
+
+        for(let i = 0; i < exp.length; i++){      
+            if(isNaN(new Number(exp[i]))){
+                if((exp[i] == '+') || (exp[i] == '-') || (exp[i] == '*') || (exp[i] == '/')){
+                    indexSign.push(i);
+                    let cropString = exp.substring(indexNumber,i);
+                    number.push(cropString);
+                    indexNumber = 1 + i;
+                }
+            }
+
+            if(exp.length === i+1){
+                let cropString = exp.substring(indexNumber,i+1);
+                number.push(cropString);
+            }
+            
+        }
+
+        let value = number[0];
+
+        for(let i = 0; i < number.length; i++){
+
+            if(exp[indexSign[i]] == '+'){
+                value = sum(value, number[i+1]);
+            }else if(exp[indexSign[i]] == '*'){
+                value = multiplication(value, number[i+1]);
+            }else if(exp[indexSign[i]] == '/'){
+                value = division(value, number[i+1]);
+            }else if(exp[indexSign[i]] == '-'){
+                value = subtraction(value, number[i+1]);
+            }
+            
+        }
+
+        function subtraction(val1, val2){
+            return +val1 - +val2;
+        }
+
+        function division(val1, val2){
+            return +val1 / +val2;
+        }
+
+        function multiplication(val1, val2){
+            return +val1 * +val2;
+        }
+
+        function sum(val1, val2){
+            return +val1 + +val2;
+        }
+
+        return value;
+    } 
+
+    function insert(num) {
+        document.form.text.value = document.form.text.value + num;
+    }
+    function equal() {
+        var exp = document.form.text.value;
+        if(exp){
+            document.form.text.value = calculator(exp);
+        }
+    }
+    function clean() {
+        document.form.text.value = "";
+    }
+    function back() {
+        var exp = document.form.text.value;
+        document.form.text.value = exp.substring(0,exp.length-1);
+    }
+</script>
 </body>
 </html>
